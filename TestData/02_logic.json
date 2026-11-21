@@ -1,0 +1,21 @@
+{
+  "Rows": 5,
+  "Columns": 4,
+  "Cells": {
+    "A1": "true",
+    "B1": "false",
+    "C1": "=A1 and B1",
+    "D1": "=A1 or B1",
+    "A2": "=not A1",
+    "B2": "=A1 eqv B1",
+    "C2": "=B1 eqv B1",
+    "D2": "=not 5 > 3 eqv false",
+    "A3": "5",
+    "B3": "7",
+    "C3": "=A3<B3",
+    "D3": "=A3=B3",
+    "A4": "=true or false and false",
+    "B4": "=false eqv false or true",
+    "C4": "=A3+B3=12 and C3"
+  }
+}

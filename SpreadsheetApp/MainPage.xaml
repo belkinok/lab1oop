@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SpreadsheetApp.MainPage"
+             Title="{Binding Title}">
+
+    <!-- Головне меню -->
+    <ContentPage.MenuBarItems>
+        <MenuBarItem Text="Файл">
+            <MenuFlyoutItem Text="Створити" Command="{Binding NewCommand}"/>
+            <MenuFlyoutItem Text="Відкрити…" Command="{Binding OpenCommand}"/>
+            <MenuFlyoutItem Text="Зберегти" Command="{Binding SaveCommand}"/>
+            <MenuFlyoutItem Text="Зберегти як…" Command="{Binding SaveAsCommand}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="Вихід" Command="{Binding ExitCommand}"/>
+        </MenuBarItem>
+        <MenuBarItem Text="Таблиця">
+            <MenuFlyoutItem Text="Обчислити" Command="{Binding CalculateCommand}"/>
+            <MenuFlyoutItem Text="Перемкнути ВИРАЗ / ЗНАЧЕННЯ" Command="{Binding ToggleModeCommand}"/>
+            <MenuFlyoutSeparator/>
+            <MenuFlyoutItem Text="Додати рядок" Command="{Binding AddRowCommand}"/>
+            <MenuFlyoutItem Text="Видалити рядок" Command="{Binding RemoveRowCommand}"/>
+            <MenuFlyoutItem Text="Додати стовпець" Command="{Binding AddColumnCommand}"/>
+            <MenuFlyoutItem Text="Видалити стовпець" Command="{Binding RemoveColumnCommand}"/>
+        </MenuBarItem>
+        <MenuBarItem Text="Довідка">
+            <MenuFlyoutItem Text="Довідка" Command="{Binding HelpCommand}"/>
+            <MenuFlyoutItem Text="Про програму" Command="{Binding AboutCommand}"/>
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!-- Кнопки, що дублюють меню -->
+        <ScrollView Grid.Row="0" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="8" Padding="10,8">
+                <Button Text="Створити" Command="{Binding NewCommand}"/>
+                <Button Text="Відкрити" Command="{Binding OpenCommand}"/>
+                <Button Text="Зберегти" Command="{Binding SaveCommand}"/>
+                <Button Text="Обчислити" Command="{Binding CalculateCommand}"/>
+                <Button Text="{Binding ToggleModeText}" Command="{Binding ToggleModeCommand}"/>
+                <Button Text="+ Рядок" Command="{Binding AddRowCommand}"/>
+                <Button Text="− Рядок" Command="{Binding RemoveRowCommand}"/>
+                <Button Text="+ Стовпець" Command="{Binding AddColumnCommand}"/>
+                <Button Text="− Стовпець" Command="{Binding RemoveColumnCommand}"/>
+                <Button Text="Довідка" Command="{Binding HelpCommand}"/>
+                <Button Text="Про програму" Command="{Binding AboutCommand}"/>
+            </HorizontalStackLayout>
+        </ScrollView>
+
+        <Label Grid.Row="1" Text="{Binding ModeText}" FontAttributes="Bold" Padding="12,0,12,6"/>
+
+        <!-- Таблиця: заголовки стовпців, потім рядки з номером і клітинками -->
+        <ScrollView Grid.Row="2" Orientation="Both">
+            <VerticalStackLayout Spacing="0">
+
+                <HorizontalStackLayout Spacing="0">
+                    <Label WidthRequest="40" HeightRequest="30" Style="{StaticResource AddressLabelStyle}"/>
+                    <HorizontalStackLayout Spacing="0" BindableLayout.ItemsSource="{Binding ColumnHeaders}">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Label Text="{Binding .}" WidthRequest="120" HeightRequest="30"
+                                       Style="{StaticResource AddressLabelStyle}"/>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
+                    </HorizontalStackLayout>
+                </HorizontalStackLayout>
+
+                <VerticalStackLayout Spacing="0" BindableLayout.ItemsSource="{Binding Rows}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <HorizontalStackLayout Spacing="0">
+                                <Label Text="{Binding Number}" WidthRequest="40" HeightRequest="40"
+                                       Style="{StaticResource AddressLabelStyle}"/>
+                                <HorizontalStackLayout Spacing="0" BindableLayout.ItemsSource="{Binding Cells}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Style="{StaticResource CellBorderStyle}" WidthRequest="120" HeightRequest="40">
+                                                <Border.Triggers>
+                                                    <DataTrigger TargetType="Border" Binding="{Binding HasError}" Value="True">
+                                                        <Setter Property="BackgroundColor" Value="#FDE7E9"/>
+                                                    </DataTrigger>
+                                                </Border.Triggers>
+                                                <Entry Text="{Binding DisplayText, Mode=TwoWay}"
+                                                       IsReadOnly="{Binding IsValueMode}"
+                                                       Focused="OnCellFocused"
+                                                       FontSize="13"
+                                                       TextColor="#201F1E"
+                                                       VerticalOptions="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </HorizontalStackLayout>
+                            </HorizontalStackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Label Grid.Row="3" Text="{Binding StatusText}" Padding="12,8"
+               BackgroundColor="{StaticResource SecondaryColor}" TextColor="#201F1E"/>
+    </Grid>
+</ContentPage>
